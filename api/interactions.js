@@ -83,7 +83,8 @@ module.exports = async (req, res) => {
      * Handle MESSAGE_COMPONENT (Type 3) - Tugmalar bosilganda
      */
     if (type === InteractionType.MESSAGE_COMPONENT) {
-        const { custom_id, message } = req.body.data;
+        const { custom_id } = data;
+        const { message } = req.body;
         
         if (custom_id.startsWith('tr_')) {
             const [_, lang] = custom_id.split('_');
