@@ -83,14 +83,22 @@ module.exports = async (req, res) => {
      * Handle MESSAGE_COMPONENT (Type 3) - Tugmalar bosilganda
      */
     if (type === InteractionType.MESSAGE_COMPONENT) {
-        const { custom_id, message } = data;
+        const { custom_id, message } = req.body.data;
         
         if (custom_id.startsWith('tr_')) {
-            const [_, lang, msgId] = custom_id.split('_');
-            const originalText = message.content.split('\n**Original:** ')[1]?.split('\n**Tarjima')[0] || 
-                               message.content.match(/\*\*Original:\*\* (.*)/)?.[1];
+            const [_, lang] = custom_id.split('_');
+            
+            // Xabar tarkibidan asl matnni aniqroq ajratib olish
+            const lines = message.content.split('\n');
+            const originalLine = lines.find(l => l.startsWith('**Original:**'));
+            const originalText = originalLine ? originalLine.replace('**Original:** ', '') : null;
 
-            if (!originalText) return res.status(400).send('Original text not found');
+            if (!originalText) {
+                return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: { content: 'Asl matnni aniqlab bo\'lmadi.', flags: 64 }
+                });
+            }
 
             try {
                 const translated = await translateText(originalText, lang);
