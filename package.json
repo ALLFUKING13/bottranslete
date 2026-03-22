@@ -1,0 +1,15 @@
+{
+  "name": "ds-translete-bot",
+  "version": "1.0.0",
+  "description": "Discord Translator Bot for Vercel",
+  "main": "api/interactions.js",
+  "scripts": {
+    "register": "node scripts/register.js"
+  },
+  "dependencies": {
+    "discord-interactions": "^3.4.0",
+    "node-fetch": "^2.6.7",
+    "google-translate-api-x": "^10.7.1",
+    "dotenv": "^16.0.3"
+  }
+}
